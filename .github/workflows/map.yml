@@ -1,0 +1,39 @@
+name: SEO Map Builder
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Sync with remote
+        run: |
+          git fetch origin
+          git reset --hard origin/main
+
+      - name: Build sitemap
+        run: python build_map.py
+
+      - name: Commit sitemap
+        run: |
+          git config user.name "Map Bot"
+          git config user.email "map@github.com"
+          git add *.xml
+          git diff --cached --quiet || git commit -m "SEO: update site map"
+          git push origin main
