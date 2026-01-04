@@ -1,33 +1,39 @@
-name: Auto Generate Sitemap
+name: SEO Map Builder
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  schedule:
+    - cron: '0 3 * * *'
   workflow_dispatch:
 
 jobs:
-  sitemap:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Generate sitemap
-        run: python sitemap.py
-
-      - name: Commit sitemap files
+      - name: Sync with remote
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add *.xml robots.txt
-          git diff --cached --quiet || git commit -m "auto: regenerate sitemap"
-          git push
+          git fetch origin
+          git reset --hard origin/main
+
+      - name: Build sitemap
+        run: python build_map.py
+
+      - name: Commit sitemap
+        run: |
+          git config user.name "Map Bot"
+          git config user.email "map@github.com"
+          git add *.xml
+          git diff --cached --quiet || git commit -m "SEO: update site map"
+          git push origin main
