@@ -50,4 +50,14 @@
     <loc>https://2015.texaslinuxfest.org/map-extra9.xml</loc>
     <lastmod>2026-01-06</lastmod>
   </sitemap>
+
+  <sitemap>
+    <loc>https://2015.texaslinuxfest.org/map-extra10.xml</loc>
+    <lastmod>2026-01-06</lastmod>
+  </sitemap>
+
+  <sitemap>
+    <loc>https://2015.texaslinuxfest.org/map-extra11.xml</loc>
+    <lastmod>2026-01-06</lastmod>
+  </sitemap>
 </sitemapindex>
